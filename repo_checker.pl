@@ -32,18 +32,12 @@ for my $repo (@$repos) {
         "https://api.github.com/repos/$org_name/$repo_name/compare/$master_branch_name...$dev_branch_name"
     );
 
-    if ( exists $comparison->{message}
+    unless ( exists $comparison->{message}
         && $comparison->{message} eq 'Not Found' )
-    {
-        print "$repo_name NOT ELIGIBILE" . $/;
-    }
-    elsif ( !$comparison->{status} ) {
-        print Dumper( "no status!", $comparison );
-        exit;
-    }
-    else{
-      my $status = $comparison->{status};
-        print "$repo_name $status" . $/;
+        {
+      my $status = $comparison->{status} || 'NO COMPARISON STATUS';
+      my $comp_url = "https://github.com/$org_name/$repo_name/compare/$master_branch_name...$dev_branch_name?expand=1";
+      print "$repo_name\t$status\t$comp_url$/";
     }
 
 }
